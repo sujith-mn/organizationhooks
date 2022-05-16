@@ -6,11 +6,11 @@ require('dotenv').config()
 
 const createApp = require('github-app')
 
-const myCert = require('fs').readFileSync('./zenhub-integration.2022-05-10.private-key.pem')
+const myCert = process.env.PRIVATE_KEY || require('fs').readFileSync(process.env.PRIVATE_KEY_PATH)
 
 const githubApp = createApp({
-    id: 199615,
-    cert: myCert
+  id: process.env.APP_ID,
+  cert: myCert
 })
 
 const port = process.env.PORT || 6000
