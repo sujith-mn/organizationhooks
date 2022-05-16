@@ -1,7 +1,5 @@
 # ZenHub Webhook Demo
 
-
-
 ## Setup
 
 ### Gtihub App
@@ -30,3 +28,10 @@ Below git commands to deploy to heroku:
 heroku login
 heroku git:remote -a zhdemo
 git push heroku master
+
+### Zenhub Integration
+
+Integrate the webhook on Zenhub AccountManagement>Integrations.
+Select Service: Custom 
+Choose a Repository to connect: organizationhooks
+Webhook URL:  https://zhdemo.herokuapp.com/

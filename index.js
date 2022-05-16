@@ -31,8 +31,6 @@ app.post('/github-app', function(req, res) {
 })
 
 app.post('/', function(req, res) {
-
-
   if (req.body.type !== 'issue_transfer') {
     debug('body is invalid type %s', body.type)
     return {
@@ -49,6 +47,7 @@ app.post('/', function(req, res) {
     issue_number: _issueNumber
   } = req.body
   const issueNumber = parseInt(_issueNumber, 10)
+
   console.log("/github-app--request:>>>>>>>>>>>>>>>>>>>>"+    organization +"/"+repo)
 
         githubApp.asApp().then(github => {
@@ -61,15 +60,35 @@ app.post('/', function(req, res) {
                 var commentText = "This issue was moved to " + req.body.to_pipeline_name + " on ZenHub."
                 console.log("Installation:", installation.id)
                 githubApp.asInstallation(installation.id).then(client => {
-                  
-                    client.issues.createComment({
-                        owner: req.body.organization,
-                        repo: req.body.repo,
-                        number: req.body.issue_number,
+/*                     client.issues.createComment({
+                        owner: organization,
+                        repo: repo,
+                        number:_issueNumber,
                         body: commentText
                     }).catch((err) => {
                         console.log("ERROR:", err)
-                    })
+                    }) */
+
+                    client.issues.deleteLabel({
+                      number:issueNumber,
+                      name:fromPipeline,
+                      owner: req.body.organization,
+                      repo: req.body.repo
+                    }).catch((err) => {
+                      console.log("ERROR:", err)
+                     })
+
+                    client.issues.addLabels({
+                      labels:[toPipeline],
+                      number:issueNumber,
+                      owner: req.body.organization,
+                      repo: req.body.repo
+                    }).catch((err) => {
+                      console.log("ERROR:", err)
+                     })
+
+
+                    
                 })
             })
         })
